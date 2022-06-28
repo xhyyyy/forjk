@@ -8,7 +8,8 @@ class DrawingUI(QWidget):
     def __init__(self,parent=None):
         super(DrawingUI,self).__init__(parent)
         self.resize(201, 201)
-
+        self.the_star = Drawing_star(self)
+        self.the_star.move(95,95)
 
 
     def paintEvent(self,event):
@@ -25,7 +26,6 @@ class DrawingUI(QWidget):
     #GUI绘制
     def drawPoints(self,qp):
         pen = QPen(Qt.green, 1, Qt.DotLine)
-
         qp.setPen(pen)
         #虚线画圆
         startx = 0
@@ -59,6 +59,7 @@ class DrawingUI(QWidget):
         qp.setBrush(brush)
         qp.drawEllipse(startx+the_long/2-2, starty+the_long/2-2, 4, 4)
 
+
 class Drawing_star(QWidget):
 
     def __init__(self,parent=None):
@@ -83,6 +84,70 @@ class Drawing_star(QWidget):
         brush.setColor(QColor(0,255,0,100))
         qp.setBrush(brush)
         qp.drawEllipse(0, 0, 10, 10)
+
+class The_three_body(QWidget):
+    def __init__(self, parent=None):
+        super(The_three_body, self).__init__(parent)
+        self.resize(21, 61)
+        self.obj = The_three_body_obj(self)
+        self.obj_begin_x = 0
+        self.obj_begin_y = 20
+        self.obj.move(self.obj_begin_x,self.obj_begin_y)
+
+
+    def paintEvent(self, event):
+        qp=QPainter()
+        qp.begin(self)
+        self.drawPoints(qp)
+        qp.end()
+
+    def drawPoints(self, qp):
+        pen = QPen(Qt.green, 1, Qt.SolidLine)
+        qp.setPen(pen)
+        qp.drawRect (0,0,20,60)
+        qp.drawLine(0,20,20,20)
+        qp.drawLine(0, 40, 20, 40)
+
+    def up_move(self):
+        if self.obj_begin_y >19:
+            self.obj_begin_y -= 20
+            self.obj.move(self.obj_begin_x, self.obj_begin_y)
+
+    def down_move(self):
+        if self.obj_begin_y <40:
+            self.obj_begin_y += 20
+            self.obj.move(self.obj_begin_x, self.obj_begin_y)
+
+
+
+
+
+
+class The_three_body_obj(QWidget):
+
+    def __init__(self,parent=None):
+        super(The_three_body_obj,self).__init__(parent)
+        self.resize(20,20)
+
+    def paintEvent(self,event):
+        #初始化绘图工具
+        qp=QPainter()
+        #开始在窗口绘制
+        qp.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
+        qp.begin(self)
+        #自定义画点方法
+        brush = QBrush(Qt.SolidPattern)
+        brush.setColor(QColor(0,255,0))
+        qp.setBrush(brush)
+        qp.drawRect(0, 0, 20, 20)
+        #结束在窗口的绘制
+        qp.end()
+
+
+
+
+
+
 
 
 
