@@ -19,7 +19,9 @@ class Example(QWidget):
 
 
         self.the_new = DrawingUI(self)
-        self.the_new.move(0,0)
+        self.the_new.move(200,200)
+        self.the_new2 = DrawingUI(self)
+        self.the_new2.move(450, 200)
         self.the_2 = Drawing_star(self)
         self.the_2_x = 195
         self.the_2_y = 195
@@ -29,6 +31,7 @@ class Example(QWidget):
         self.grabKeyboard()
         self.btn = QPushButton('关闭', self)
         self.btn.clicked.connect(QCoreApplication.instance().quit)
+        self.btn.move(1470,0)
         self.show()
 
     def keyPressEvent(self, QKeyEvent):

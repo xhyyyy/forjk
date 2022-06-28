@@ -7,7 +7,8 @@ class DrawingUI(QWidget):
 
     def __init__(self,parent=None):
         super(DrawingUI,self).__init__(parent)
-        self.resize(400, 400)
+        self.resize(201, 201)
+
 
 
     def paintEvent(self,event):
@@ -27,29 +28,36 @@ class DrawingUI(QWidget):
 
         qp.setPen(pen)
         #虚线画圆
-        qp.drawEllipse(100,100,200,200)
+        startx = 0
+        starty = 0
+        the_long = 200
+        qp.drawEllipse(startx,starty,the_long,the_long)
         # 虚线画长方形
-        qp.drawRect(100, 100, 200, 200)
+        qp.drawRect(startx, starty, the_long, the_long)
         pen = QPen(Qt.green, 1, Qt.SolidLine)
         qp.setPen(pen)
         #实线画线
-        qp.drawLine(200, 100, 200, 300)
-        qp.drawLine(100, 200, 300, 200)
+        qp.drawLine(startx+the_long/2, starty, startx+the_long/2, starty+the_long)
+        qp.drawLine(startx, starty+the_long/2, startx+the_long, starty+the_long/2)
         #短线 X轴
-        qp.drawLine(195, 167, 205, 167)
-        qp.drawLine(195, 134, 205, 134)
-        qp.drawLine(195, 233, 205, 233)
-        qp.drawLine(195, 266, 205, 266)
+        qp.drawLine(startx + the_long / 2 - 5, starty + (the_long / 2) * 1 / 3, startx + the_long / 2 + 5,
+                    starty + (the_long / 2) * 1 / 3)
+        qp.drawLine(startx+the_long/2-5, starty+(the_long/2)*2/3, startx+the_long/2+5, starty+(the_long/2)*2/3)
+        qp.drawLine(startx + the_long / 2 - 5, starty + (the_long / 2) * 4 / 3, startx + the_long / 2 + 5,
+                    starty + (the_long / 2) * 4 / 3)
+        qp.drawLine(startx + the_long / 2 - 5, starty + (the_long / 2) * 5 / 3, startx + the_long / 2 + 5,
+                    starty + (the_long / 2) * 5 / 3)
+
         # 短线 Y轴
-        qp.drawLine(134, 195, 134, 205)
-        qp.drawLine(167, 195, 167, 205)
-        qp.drawLine(233, 195, 233, 205)
-        qp.drawLine(266, 195, 266, 205)
+        qp.drawLine(startx + (the_long / 2) * 1 / 3, starty + the_long / 2 - 5,startx + (the_long / 2) * 1 / 3, starty + the_long / 2 + 5)
+        qp.drawLine(startx + (the_long / 2) * 2 / 3, starty + the_long / 2 - 5,startx + (the_long / 2) * 2 / 3, starty + the_long / 2 + 5)
+        qp.drawLine(startx + (the_long / 2) * 4 / 3, starty + the_long / 2 - 5,startx + (the_long / 2) * 4 / 3, starty + the_long / 2 + 5)
+        qp.drawLine(startx + (the_long / 2) * 5 / 3, starty + the_long / 2 - 5,startx + (the_long / 2) * 5 / 3, starty + the_long / 2 + 5)
 
         brush = QBrush(Qt.SolidPattern)
         brush.setColor(QColor(255,0,0))
         qp.setBrush(brush)
-        qp.drawEllipse(198, 198, 4, 4)
+        qp.drawEllipse(startx+the_long/2-2, starty+the_long/2-2, 4, 4)
 
 class Drawing_star(QWidget):
 
