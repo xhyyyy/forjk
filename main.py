@@ -4,43 +4,53 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import qdarkstyle
 
-class Drawing(QWidget):
-    def __init__(self,parent=None):
-        super(Drawing,self).__init__(parent)
-        self.resize(300,200)
+from newui import DrawingUI,Drawing_star
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.resize(1500, 843.75)
         self.setFixedSize(self.width(), self.height())
-        self.setWindowTitle('在窗口画点')
+        self.setWindowTitle('测试UI')
         self.setWindowFlags(Qt.FramelessWindowHint)
-        btn = QPushButton('关闭', self)
-        btn.clicked.connect(QCoreApplication.instance().quit)
 
 
+        self.the_new = DrawingUI(self)
+        self.the_new.move(0,0)
+        self.the_2 = Drawing_star(self)
+        self.the_2_x = 195
+        self.the_2_y = 195
+        self.the_2.move(self.the_2_x, self.the_2_y)
 
+        self.setWindowTitle('test')
+        self.grabKeyboard()
+        self.btn = QPushButton('关闭', self)
+        self.btn.clicked.connect(QCoreApplication.instance().quit)
+        self.show()
 
-    def paintEvent(self,event):
-        #初始化绘图工具
-        qp=QPainter()
-        #开始在窗口绘制
-        qp.begin(self)
-        #自定义画点方法
-        self.drawPoints(qp)
-        #结束在窗口的绘制
-        qp.end()
+    def keyPressEvent(self, QKeyEvent):
+        if QKeyEvent.key()==Qt.Key_Down:
+            print('按了下')
+            self.the_2_y +=5
+            self.the_2.move(self.the_2_x, self.the_2_y)
+        if QKeyEvent.key()==Qt.Key_Up:
+            print('按了上')
+            self.the_2_y -=5
+            self.the_2.move(self.the_2_x, self.the_2_y)
+        if QKeyEvent.key()==Qt.Key_Left:
 
-    def drawPoints(self,qp):
-        qp.setPen(Qt.green)
-        size=self.size()
+            self.the_2_x -=5
+            self.the_2.move(self.the_2_x, self.the_2_y)
+        if QKeyEvent.key()==Qt.Key_Right:
 
-        for i in range(1000):
-            #绘制郑玄函数图像，它的周期是【-100,100】
-            x=100*(-1+2.0*i/1000)+size.width()/2.0
-            y=-50*math.sin((x-size.width()/2.0)*math.pi/50)+size.height()/2.0
-
-            qp.drawPoint(x,y)
+            self.the_2_x +=5
+            self.the_2.move(self.the_2_x, self.the_2_y)
 
 if __name__ == '__main__':
     app=QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-    demo=Drawing()
-    demo.show()
+    demo = Example()
     sys.exit(app.exec_())
