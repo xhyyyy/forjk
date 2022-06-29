@@ -9,7 +9,11 @@ class DrawingUI(QWidget):
         super(DrawingUI,self).__init__(parent)
         self.resize(201, 201)
         self.the_star = Drawing_star(self)
-        self.the_star.move(95,95)
+        #放置靶星 移动速度默认为2
+        self.the_star_move_speed = 2
+        self.the_star_x = 95
+        self.the_star_y = 95
+        self.move_star()
 
 
     def paintEvent(self,event):
@@ -58,6 +62,36 @@ class DrawingUI(QWidget):
         brush.setColor(QColor(255,0,0))
         qp.setBrush(brush)
         qp.drawEllipse(startx+the_long/2-2, starty+the_long/2-2, 4, 4)
+
+    def move_star(self):
+        self.the_star.move(self.the_star_x, self.the_star_y)
+
+    def move_star_up(self):
+        if self.the_star_y >-5:
+            self.the_star_y -=  self.the_star_move_speed
+            self.move_star()
+
+    def move_star_down(self):
+        if self.the_star_y <195:
+            self.the_star_y +=  self.the_star_move_speed
+            self.move_star()
+
+
+    def move_star_left(self):
+        if self.the_star_x >-5:
+            self.the_star_x -=  self.the_star_move_speed
+            self.move_star()
+
+    def move_star_right(self):
+        if self.the_star_x <195:
+            self.the_star_x +=  self.the_star_move_speed
+            self.move_star()
+
+
+
+
+
+
 
 
 class Drawing_star(QWidget):

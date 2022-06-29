@@ -14,18 +14,23 @@ class Example(QWidget):
     def initUI(self):
         self.resize(1500, 843.75)
         self.the_LONG = 100
+        self.widget_list = []
         self.setFixedSize(self.width(), self.height())
         self.setWindowTitle('测试UI')
         self.setWindowFlags(Qt.FramelessWindowHint)
-
-
         self.the_new = DrawingUI(self)
         self.the_new.move(200,200)
+        self.widget_list.append(self.the_new)
         self.the_new2 = DrawingUI(self)
         self.the_new2.move(450, 200)
+        self.widget_list.append(self.the_new2)
+
+
         #日字形按钮
         self.button_myself = The_three_body(self)
         self.button_myself.move(200, 100)
+
+
 
 
 
@@ -37,29 +42,24 @@ class Example(QWidget):
         self.show()
 
     def keyPressEvent(self, QKeyEvent):
-        the_speed =2
-        self.the_star_x = 95
-        self.the_star_y = 95
+
+
         if QKeyEvent.key()==Qt.Key_Down:
             print('按了下')
-            self.the_star_y +=the_speed
-            self.the_new.the_star.move(self.the_star_x, self.the_star_y)
-            self.the_new2.the_star.move(self.the_star_x, self.the_star_y)
+            for w in self.widget_list:
+                w.move_star_down()
             self.button_myself.down_move()
         if QKeyEvent.key()==Qt.Key_Up:
             print('按了上')
-            self.the_star_y -=the_speed
-            self.the_new.the_star.move(self.the_star_x, self.the_star_y)
-            self.the_new2.the_star.move(self.the_star_x, self.the_star_y)
+            for w in self.widget_list:
+                w.move_star_up()
             self.button_myself.up_move()
         if QKeyEvent.key()==Qt.Key_Left:
-            self.the_star_x -=the_speed
-            self.the_new.the_star.move(self.the_star_x, self.the_star_y)
-            self.the_new2.the_star.move(self.the_star_x, self.the_star_y)
+            for w in self.widget_list:
+                w.move_star_left()
         if QKeyEvent.key()==Qt.Key_Right:
-            self.the_star_x +=the_speed
-            self.the_new.the_star.move(self.the_star_x, self.the_star_y)
-            self.the_new2.the_star.move(self.the_star_x, self.the_star_y)
+            for w in self.widget_list:
+                w.move_star_right()
 
 if __name__ == '__main__':
     app=QApplication(sys.argv)
