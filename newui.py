@@ -1,5 +1,5 @@
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import QWidget,QPushButton
+from PyQt5.QtWidgets import QWidget,QLCDNumber,QLabel
 from PyQt5.QtCore import *
 
 
@@ -7,13 +7,29 @@ class DrawingUI(QWidget):
 
     def __init__(self,parent=None):
         super(DrawingUI,self).__init__(parent)
-        self.resize(201, 201)
+        self.resize(250, 250)
         self.the_star = Drawing_star(self)
         #放置靶星 移动速度默认为2
         self.the_star_move_speed = 2
         self.the_star_x = 95
         self.the_star_y = 95
         self.move_star()
+        self.LED_init()
+
+
+    def LED_init(self):
+        self.led_1 = QLCDNumber(self)
+        self.led_1.setDigitCount(5)
+        self.led_1.setSegmentStyle(QLCDNumber.Flat)
+        self.led_1.setStyleSheet("color: green;")
+        self.led_1.display(-1000)
+        self.led_1.move(40,210)
+        self.txt_x = QLabel(self)
+        self.txt_x.setFont(QFont("Roman times",10))
+        self.txt_x.resize(40,20)
+        self.txt_x.setText('X轴：')
+        self.txt_x.setStyleSheet("color: green;")
+        self.txt_x.move(0,215)
 
 
     def paintEvent(self,event):
@@ -51,7 +67,6 @@ class DrawingUI(QWidget):
                     starty + (the_long / 2) * 4 / 3)
         qp.drawLine(startx + the_long / 2 - 5, starty + (the_long / 2) * 5 / 3, startx + the_long / 2 + 5,
                     starty + (the_long / 2) * 5 / 3)
-
         # 短线 Y轴
         qp.drawLine(startx + (the_long / 2) * 1 / 3, starty + the_long / 2 - 5,startx + (the_long / 2) * 1 / 3, starty + the_long / 2 + 5)
         qp.drawLine(startx + (the_long / 2) * 2 / 3, starty + the_long / 2 - 5,startx + (the_long / 2) * 2 / 3, starty + the_long / 2 + 5)
@@ -76,7 +91,6 @@ class DrawingUI(QWidget):
             self.the_star_y +=  self.the_star_move_speed
             self.move_star()
 
-
     def move_star_left(self):
         if self.the_star_x >-5:
             self.the_star_x -=  self.the_star_move_speed
@@ -86,12 +100,6 @@ class DrawingUI(QWidget):
         if self.the_star_x <195:
             self.the_star_x +=  self.the_star_move_speed
             self.move_star()
-
-
-
-
-
-
 
 
 class Drawing_star(QWidget):
@@ -118,6 +126,7 @@ class Drawing_star(QWidget):
         brush.setColor(QColor(0,255,0,100))
         qp.setBrush(brush)
         qp.drawEllipse(0, 0, 10, 10)
+
 
 class The_three_body(QWidget):
     def __init__(self, parent=None):
@@ -151,10 +160,6 @@ class The_three_body(QWidget):
         if self.obj_begin_y <40:
             self.obj_begin_y += 20
             self.obj.move(self.obj_begin_x, self.obj_begin_y)
-
-
-
-
 
 
 class The_three_body_obj(QWidget):
