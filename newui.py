@@ -24,12 +24,26 @@ class DrawingUI(QWidget):
         self.led_1.setStyleSheet("color: green;")
         self.led_1.display(-1000)
         self.led_1.move(40,210)
+
+        self.led_2 = QLCDNumber(self)
+        self.led_2.setDigitCount(5)
+        self.led_2.setSegmentStyle(QLCDNumber.Flat)
+        self.led_2.setStyleSheet("color: green;")
+        self.led_2.display(-1000)
+        self.led_2.move(140,210)
+
         self.txt_x = QLabel(self)
         self.txt_x.setFont(QFont("Roman times",10))
         self.txt_x.resize(40,20)
         self.txt_x.setText('X轴：')
         self.txt_x.setStyleSheet("color: green;")
         self.txt_x.move(0,215)
+
+        self.txt_y = QLabel(self)
+        self.txt_y.resize(40,20)
+        self.txt_y.setText('Y轴：')
+        self.txt_y.setStyleSheet("color: green;")
+        self.txt_y.move(100,215)
 
 
     def paintEvent(self,event):
@@ -101,6 +115,14 @@ class DrawingUI(QWidget):
             self.the_star_x +=  self.the_star_move_speed
             self.move_star()
 
+    def move_by_serial(self,y,x):
+        # y,x -1000~1000
+        #print(f"收到的参数{x},{y}")
+        self.the_star_y = 100 - (y / 10)-5
+        self.the_star_x = 100 + (x / 10)-5
+        self.move_star()
+
+
 
 class Drawing_star(QWidget):
 
@@ -162,6 +184,8 @@ class The_three_body(QWidget):
             self.obj.move(self.obj_begin_x, self.obj_begin_y)
 
 
+
+
 class The_three_body_obj(QWidget):
 
     def __init__(self,parent=None):
@@ -182,6 +206,60 @@ class The_three_body_obj(QWidget):
         #结束在窗口的绘制
         qp.end()
 
+
+class The_user_keys(QWidget):
+    def __init__(self,parent=None,):
+        super(The_user_keys,self).__init__(parent)
+        self.resize(63, 63)
+        self.label_key = QLabel(self)
+
+        self.label_key.move(10,22)
+        self.down_obj = The_user_key_obj(self)
+        self.down_obj.move(100,100)
+
+
+    def paintEvent(self,event):
+        #初始化绘图工具
+        qp=QPainter()
+        #开始在窗口绘制
+        qp.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
+        qp.begin(self)
+        #自定义画点方法
+
+        pen = QPen(Qt.green, 1, Qt.SolidLine)
+        qp.setPen(pen)
+        qp.drawRect(0, 0, 62, 62)
+        qp.drawRect(6, 6, 50, 50)
+        #结束在窗口的绘制
+        qp.end()
+
+    #按下变亮 传入值需要是1 int类型
+    def key_down(self,the_value):
+        if the_value == '1':
+            self.down_obj.move(8,8)
+        else:
+            self.down_obj.move(100, 100)
+
+
+class The_user_key_obj(QWidget):
+
+    def __init__(self,parent=None):
+        super(The_user_key_obj,self).__init__(parent)
+        self.resize(44,44)
+
+    def paintEvent(self,event):
+        #初始化绘图工具
+        qp=QPainter()
+        #开始在窗口绘制
+        qp.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
+        qp.begin(self)
+        #自定义画点方法
+        brush = QBrush(Qt.SolidPattern)
+        brush.setColor(QColor(0,255,0))
+        qp.setBrush(brush)
+        qp.drawRect(1, 1, 42, 42)
+        #结束在窗口的绘制
+        qp.end()
 
 
 
