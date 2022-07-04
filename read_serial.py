@@ -75,14 +75,18 @@ class Read_serial(QWidget):
             for port in port_list:
                 try:
                     self.tryserial(port)
-                    break
+                    return port
                 except func_timeout.exceptions.FunctionTimedOut:
                     print(f"{port}串口不是摇杆")
 
-            self.the_com = serial.Serial(port, 115200)
+            try:
+                self.the_com = serial.Serial(port, 115200)
+            except Exception as e:
+                self.serial_signal.emit(f'出错了，没有串口{e}')
+                return None
 
 
-        print('这一步了')
+        #print('这一步了')
 
     @func_set_timeout(0.3)
     def tryserial(self,port_in):
@@ -95,7 +99,8 @@ class Read_serial(QWidget):
 
 
 
-    def start_read(self):
+    def start_read(self,port):
+        self.the_com = serial.Serial(port, 115200)
         readnum = 0
         while 1:
             while True:
@@ -109,9 +114,9 @@ class Read_serial(QWidget):
                         keys, ledstatus, L1Y, L1X, R1Y, R1X, L2Y, L2X,R2Y,R2X,L3Y,L3X, ROLL = struct.unpack(
                             '<2H11h',
                             bytearray.fromhex(data[8:60]))  # 2个unsigned short 范围是0-65535 解析前8字节，11个short,解析后端字节小端
-
                         readnum += 1
-                        self.framelist.append([keys, ledstatus, L1Y, L1X, R1Y, R1X, L2Y, L2X ,R2Y,R2X,L3Y,L3X,readnum,ROLL])
+                        keys_24 =data[6:12]
+                        self.framelist.append([keys, ledstatus, L1Y, L1X, R1Y, R1X, L2Y, L2X ,R2Y,R2X,L3Y,L3X,readnum,ROLL,keys_24])
 
                         if len(self.framelist) > 86400:
                             self.framelist.clear()

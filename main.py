@@ -49,20 +49,14 @@ class Example(QWidget):
         # #日字形按钮
         # self.button_myself = The_three_body(self)
         # self.button_myself.move(200, 100)
-        #按键
-        self.key_list =[]
-        for i in range(0,16):
-            key =The_user_keys(self)
-            key.label_key.setText(f'KEY {i+1}')
-            key.move(i*90+50,500)
-            self.key_list.append(key)
+
 
         #标签文字
         self.the_text_1 = QLabel(self)
         self.the_text_1.setStyleSheet("font-weight: bold;color:green")
         self.the_text_1.resize(400,100)
         self.the_text_1.setText("当前按键的值：   0  ")
-        self.the_text_1.move(500,600)
+        self.the_text_1.move(500,700)
 
 
         self.the_text_2 = QLabel(self)
@@ -71,7 +65,14 @@ class Example(QWidget):
 
         self.the_text_2.move(500, 50)
 
-
+        #下拉菜单
+        self.the_down_box = QComboBox(self)
+        self.the_down_box.addItem('16按键')
+        self.the_down_box.addItem('24按键')
+        self.the_down_box.currentIndexChanged.connect(self.the_down_box_change)
+        self.the_down_box.move(100,50)
+        #按键
+        self.init_key()
 
         #self.grabKeyboard()
         self.btn = QPushButton('关闭', self)
@@ -91,6 +92,47 @@ class Example(QWidget):
         self.the_text_2.setText(f'提示信息： {str}')
 
 
+    def init_key(self):
+        self.key_list_16 = []
+        for i in range(0, 16):
+            key = The_user_keys(self)
+            key.label_key.setText(f'KEY {i + 1}')
+            key.move(i * 90 + 50, 500)
+            self.key_list_16.append(key)
+        self.key_list_24 =[]
+        for i in range(0,24):
+            key = The_user_keys(self)
+            key.label_key.setText(f'KEY {i + 1}')
+            if i <12:
+                key.move(i * 90 + 50, 1800)
+            else:
+                key.move((i-12)*90 +50,1800 )
+            self.key_list_24.append(key)
+
+
+
+    def the_down_box_change(self):
+        if self.the_down_box.currentIndex() == 0:
+            for widget in self.key_list_24:
+                widget.move(1800, 1800)
+
+
+            for i,key_16 in enumerate(self.key_list_16):
+                key_16.move(i * 90 + 50, 500)
+
+        #添加24按键切换逻辑
+        else:
+            for widget in self.key_list_16:
+                widget.move(1800,1800)
+
+            for i,key_24 in enumerate(self.key_list_24):
+                if i <12:
+                    key_24.move(i * 90 + 240, 500)
+                else:
+                    key_24.move((i-12)*90+240,600)
+
+
+
 
     def move_by_serial(self):
 
@@ -103,18 +145,34 @@ class Example(QWidget):
                 w.led_2.display(self.framelist[-1][2 * n + 2])
 
             except Exception as e:
-                print(e)
-        # 待添加按键的
-        try:
-            keys = format(self.framelist[-1][0],"#018b")
-            self.show_key_value(keys, self.framelist[-1][0])
-            #print(keys)
-            for i in range(0,16):
-                #i+2是因为#o18b  ob 10000
-                self.key_list[i].key_down(keys[i+2])
+                pass
+                #print(e)
+        # 按键的逻辑
 
-        except Exception as e:
-            print(e)
+        if self.the_down_box.currentIndex() == 0:
+            try:
+                keys = format(self.framelist[-1][0],"#018b")
+                self.show_key_value(keys, self.framelist[-1][0])
+                #print(keys)
+                for i in range(0,16):
+                    #i+2是因为#o18b  ob 10000
+                    self.key_list_16[i].key_down(keys[i+2])
+
+            except Exception as e:
+                pass
+                #print(e)
+        else:
+            try:
+                key_value_24 = int(self.framelist[-1][14],16)
+                keys = format(key_value_24,"#026b")
+                #print(f'24按键:值{ self.framelist[-1][14]},{format(key_value_24,"#026b")}')
+                self.show_key_value(keys, key_value_24)
+                for i in range(0,24):
+                    self.key_list_24[i].key_down(keys[i + 2])
+
+            except Exception as e:
+                pass
+
 
 
 
@@ -123,9 +181,7 @@ class Example(QWidget):
                                 f"\n"
                                 f"当前按键的值（十六进制）: {hex(hexvalue)} ")
 
-
-
-
+    #键盘逻辑 可删除 留作参考
     def keyPressEvent(self, QKeyEvent):
 
 
@@ -156,8 +212,9 @@ class Thread_serial(QThread):
     def run(self):
         the_task = Read_serial(self.framelist)
         the_task.serial_signal.connect(self.show_text)
-        the_task.start_read_serial()
-        the_task.start_read()
+        the_port = the_task.start_read_serial()
+        if  the_port !=None:
+            the_task.start_read(the_port)
 
         print('读取串口报错了')
 
